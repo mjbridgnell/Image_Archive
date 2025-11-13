@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react'
+import { Display_title } from './Utils';
+
+function handleImageClick() {
+  console.log("You clicked")
+}
 
 function App() {
 
-  const [data, setData] = useState([{}])
+  const [images, setImages] = useState([])
 
   useEffect(() => {
-    fetch("/members").then(
+    fetch("/images").then(
       res => res.json()
     ).then(
       data => {
-        setData(data)
+        setImages(data)
         console.log(data)
       }
     )
@@ -17,15 +22,22 @@ function App() {
 
   return (
     <div>
-
-      {(typeof data.members === 'undefined') ? (
+      <Display_title />
+      {images.length === 0 ? (
         <p>Loading...</p>
       ) : (
-        data.members.map((member, i) => (
-          <p key={i}>{member}</p>
+        images.map((image, i) => (
+          <div key={i}>
+            <img
+              src={`/images/${image}`}
+              alt={image}
+              style={{ width: "200px", margin: "10px" }}
+              onClick={() => handleImageClick(image)}
+            />
+            <p>{image}</p>
+          </div>
         ))
       )}
-
     </div>
   )
 }
