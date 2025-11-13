@@ -1,45 +1,25 @@
-import React, { useState, useEffect } from 'react'
-import { Display_title } from './Utils';
-
-function handleImageClick() {
-  console.log("You clicked")
-}
+import React, { useState, useEffect } from 'react';
+import { Display_Images } from './ImageList';
+import LoginForm from "./LoginForm";
 
 function App() {
-
-  const [images, setImages] = useState([])
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetch("/images").then(
-      res => res.json()
-    ).then(
-      data => {
-        setImages(data)
-        console.log(data)
-      }
-    )
-  }, [])
+      fetch("/auth/whoami", {
+        credentials: "include"
+      })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data?.user) setUser(data.user);
+        });
+  }, []);
 
-  return (
-    <div>
-      <Display_title />
-      {images.length === 0 ? (
-        <p>Loading...</p>
-      ) : (
-        images.map((image, i) => (
-          <div key={i}>
-            <img
-              src={`/images/${image}`}
-              alt={image}
-              style={{ width: "200px", margin: "10px" }}
-              onClick={() => handleImageClick(image)}
-            />
-            <p>{image}</p>
-          </div>
-        ))
-      )}
-    </div>
-  )
-}
+  if (!user) {
+    return <LoginForm onLoginSuccess={setUser} />;
+  }
+  return <Display_Images onLogout={() => setUser(null)} />;
+
+}    
 
 export default App
