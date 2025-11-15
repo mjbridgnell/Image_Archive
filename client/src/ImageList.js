@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Display_title } from './Utils';
+import { Display_title } from "./Utils";
+import "./Styles.css";
 
 export function Display_Images() {
   const [images, setImages] = useState([]);
@@ -20,13 +21,13 @@ export function Display_Images() {
         <p>Loading...</p>
       ) : (
         images.map((image, i) => (
-          <div key={i}>
-            <img
-              src={`/images/${image}`}
-              alt={image}
-              style={{ width: "200px", margin: "10px" }}
-            />
-            <p>{image}</p>
+          <div id="container" key={i}>
+            <button onClick={() => {
+              alert('you clicked');
+            }}>
+              <p>{image}</p>
+              <img className="img" src={`/images/${image}`} />
+            </button>
           </div>
         ))
       )}
